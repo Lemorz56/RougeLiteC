@@ -2,24 +2,33 @@
 #include <stdlib.h>
 #include <windows.h>
 
+#include<time.h> //to allow s.rand
+
+typedef struct Position 
+{
+    int x;
+    int y;
+    //TILE_TYPE tile;
+} Position;
+
 typedef struct Room
 {
-    int xPosition;
-    int yPosition;
+    Position position;
     int height;
     int width;
+    
+    Position door[4];
     // Monster ** monsters;
     // Item ** items;
-
 } Room;
 
 typedef struct Player //player "class" / struct.
 {
-    int xPosition;
-    int yPosition;
+    Position position;
     int health;
     //Room * room; //used to store which room player is in.
 }   Player;
+
 
 int screenSetUp(); //screenSetup func
 Room ** mapSetUp(); //print map func
@@ -103,25 +112,25 @@ Room ** mapSetUp() //setup the map
 
    return rooms;
 }
-int drawRoom(Room * room)
+int drawRoom(Room * room) //DRAWING rooms
 {
     int x;
     int y;
     /* draw top and bottom */
-    for(x = room->xPosition; x < room->xPosition + room->width; x++)
+    for (x = room->position.x; x < room->position.x + room->width; x++)
     {
-        mvprintw(room->yPosition, x, "-"); //Top
-        mvprintw(room->yPosition + room->height - 1, x, "-"); //Bottom
+        mvprintw(room->position.y, x, "-");                   //Top
+        mvprintw(room->position.y + room->height - 1, x, "-"); //Bottom
     }
 
     /* Draw floors and sidewalls*/
-    for(y = room->yPosition + 1; y < room->yPosition + room->height - 1; y++)
+    for (y = room->position.y + 1; y < room->position.y + room->height - 1; y++)
     {
         //draw side walls
-        mvprintw(y, room->xPosition, "|");
-        mvprintw(y, room->xPosition + room->width - 1, "|");
+        mvprintw(y, room->position.x, "|");
+        mvprintw(y, room->position.x + room->width - 1, "|");
         //draw walls
-        for(x = room->xPosition + 1; x < room->xPosition + room->width - 1; x++)
+        for (x = room->position.x + 1; x < room->position.x + room->width - 1; x++)
         {
             mvprintw(y, x, ".");
         }
@@ -129,17 +138,17 @@ int drawRoom(Room * room)
     return 1;
 }
 
-Room * createRoom(int y, int x, int height, int width)
+Room * createRoom(int y, int x, int height, int width) //CREATING rooms
 {
     //declare new room
     Room * newRoom;
     newRoom = malloc(sizeof(Room));
 
-    newRoom->xPosition = x;
-    newRoom->yPosition = y;
+    newRoom->position.x = x;
+    newRoom->position.y = y;
     newRoom->height = height;
     newRoom->width = width;
-
+    
     return newRoom;
 }
 
@@ -149,12 +158,12 @@ Player * playerSetup()
     //newPlayer = malloc(sizeof(Player));
     newPlayer = (Player *)malloc(sizeof(Player));
 
-    newPlayer->xPosition = 14;
-    newPlayer->yPosition = 14;
+    newPlayer->position.x = 14;
+    newPlayer->position.y = 14;
     newPlayer->health = 20;
-   
-    mvprintw(newPlayer->yPosition, newPlayer->xPosition, "@");
-    move(newPlayer->yPosition, newPlayer->xPosition);
+
+    mvprintw(newPlayer->position.y, newPlayer->position.x, "@");
+    move(newPlayer->position.y, newPlayer->position.x);
 
     return newPlayer;
 }
@@ -168,29 +177,29 @@ int handleInput(int input, Player *user)
         //Move up
         case 'w':
         case 'W':
-            newY = user->yPosition - 1;
-            newX = user->xPosition;
+            newY = user->position.y - 1;
+            newX = user->position.x;
             //playerMove(user->yPosition - 1, user->xPosition, user);
             break;
         //move down
         case 's':
         case 'S':
-            newY = user->yPosition + 1;
-            newX = user->xPosition;
+            newY = user->position.y + 1;
+            newX = user->position.x;
             // playerMove(user->yPosition + 1, user->xPosition, user);
             break;
         //move left
         case 'a':
         case 'A':
-            newY = user->yPosition;
-            newX = user->xPosition - 1;
+            newY = user->position.y;
+            newX = user->position.x - 1;
             // playerMove(user->yPosition, user->xPosition - 1, user);
             break;
         //move right
         case 'd':
         case 'D':
-            newY = user->yPosition;
-            newX = user->xPosition + 1;
+            newY = user->position.y;
+            newX = user->position.x + 1;
             // playerMove(user->yPosition, user->xPosition + 1, user);
             break;
         default:
@@ -209,20 +218,20 @@ int checkPosition(int newY, int newX, Player * user)
             playerMove(newY, newX, user);
             break;
         default:
-            move(user->yPosition, user->xPosition);
+            move(user->position.y, user->position.x);
             break;
     }
 }
 
 int playerMove(int y, int x, Player * user)
 {
-    mvprintw(user->yPosition, user->xPosition, "."); //put a floor mark where user is.
+    mvprintw(user->position.y, user->position.x, "."); //put a floor mark where user is.
 
-    user->xPosition = x;
-    user->yPosition = y;
+    user->position.x = x;
+    user->position.y = y;
 
-    mvprintw(user->yPosition, user->xPosition, "@"); //put user att updated pos.
-    move(user->yPosition, user->xPosition); //move cursor to user.
+    mvprintw(user->position.y, user->position.x, "@"); //put user att updated pos.
+    move(user->position.y, user->position.x);          //move cursor to user.
 }
 
 // https://youtu.be/6D_G2ceFFGA?t=558
