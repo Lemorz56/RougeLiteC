@@ -1,8 +1,8 @@
 #include "rouge.h"
 
-Player *playerSetup()
+Player * playerSetup()
 {
-    Player *newPlayer;
+    Player * newPlayer;
     //newPlayer = malloc(sizeof(Player));
     newPlayer = (Player *)malloc(sizeof(Player));
 
@@ -16,10 +16,10 @@ Player *playerSetup()
     return newPlayer;
 }
 
-int handleInput(int input, Player *user)
+Position * handleInput(int input, Player * user)
 {
     Position * newPosition;
-    newPosition = malloc(size(Position));
+    newPosition = malloc(sizeof(Position));
     switch (input)
     {
     //Move up
@@ -57,15 +57,15 @@ int handleInput(int input, Player *user)
 }
 
 /* check what is at the next position */
-int checkPosition(Position * newPosition, Player *user)
+int checkPosition(Position * newPosition, Player * user, char ** level)
 {
     int space;
-    switch (mvinch(newY, newX))
+    switch (mvinch(newPosition->y, newPosition->x))
     {
     case '.':
     case '#':
     case '+':
-        playerMove(newY, newX, user);
+        playerMove(newPosition, user, level);
         break;
     default:
         move(user->position.y, user->position.x);
@@ -73,12 +73,17 @@ int checkPosition(Position * newPosition, Player *user)
     }
 }
 
-int playerMove(Position *newPosition, Player *user)
+int playerMove(Position * newPosition, Player * user, char ** level)
 {
-    mvprintw(user->position.y, user->position.x, "."); //put a floor mark where user is.
+    char buffer[8]; //create an char of size 8 that we can put whatever char is where our user position is.
 
-    user->position.x = x;
-    user->position.y = y;
+    //CONVERTS SINGLE CHARACTER to string characters.
+    sprintf(buffer, "%c", level[user->position.y][user->position.x]); //turns the level char array into a passable char store it inside BUFFER
+
+    mvprintw(user->position.y, user->position.x, buffer); //put a floor mark where user is. and it has 2 be double string char
+
+    user->position.x = newPosition->x;
+    user->position.y = newPosition->y;
 
     mvprintw(user->position.y, user->position.x, "@"); //put user att updated pos.
     move(user->position.y, user->position.x);          //move cursor to user.

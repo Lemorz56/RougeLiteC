@@ -6,13 +6,11 @@ int main()
     int ch;
     Position * newPosition;
 
-    char ** level;
+    Level * level;
 
     screenSetUp();
 
-    mapSetUp();
-
-    level = saveLevelPositions();
+    level = createLevel(); //this breaks...
 
     user = playerSetup(); //Pointer variable gets assigned in the function
 
@@ -20,6 +18,7 @@ int main()
     while ((ch = getch()) != 'q')
     {
         newPosition = handleInput(ch, user);
+        checkPosition(newPosition, user, level->tiles);
     }
     endwin();
     return 0;

@@ -1,8 +1,29 @@
 #include "rouge.h"
 
-Room **mapSetUp() //setup the map
+// typedef struct Level
+// {
+//     char **tiles;
+//     int numberOfRooms;
+//     struct Room **rooms;
+//     struct Monster **monsters;
+//     int numberOfMonsters;
+// } Level;
+
+Level * createLevel(int level)
 {
-    Room **rooms;
+    Level * newLevel;
+    newLevel = malloc(sizeof(Level));
+
+    newLevel->level = level;
+    newLevel->numberOfRooms = 3;
+    newLevel->rooms = roomSetUp();
+    
+    return newLevel;
+}
+
+Room ** roomSetUp() //setup the map
+{
+    Room ** rooms;
     rooms = malloc(sizeof(Room) * 6);
 
     //    mvprintw(y, x, "string");
@@ -29,7 +50,7 @@ Room **mapSetUp() //setup the map
     return rooms;
 }
 
-char **saveLevelPositions()
+char ** saveLevelPositions()
 {
     int x, y;
     char ** positions;
@@ -38,7 +59,7 @@ char **saveLevelPositions()
     for(y = 0; y < 25; y++)
     {
         positions[y] = malloc(sizeof(char) * 100);
-        for(x = 0; x < x < 100; x++)
+        for(x = 0; x < 100; x++)
         {
             positions[y][x] = mvinch(y, x);
         }

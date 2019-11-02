@@ -5,6 +5,16 @@
 #include <stdlib.h>
 #include <time.h> //to allow s.rand
 
+typedef struct Level
+{
+    char ** tiles;
+    int level;
+    int numberOfRooms;
+    struct Room ** rooms;
+    struct Monster ** monsters;
+    int numberOfMonsters;
+} Level;
+
 typedef struct Position
 {
     int x;
@@ -18,7 +28,7 @@ typedef struct Room
     int height;
     int width;
 
-    Position **doors;
+    Position ** doors;
     // Monster ** monsters;
     // Item ** items;
 } Room;
@@ -33,19 +43,20 @@ typedef struct Player //player "class" / struct.
 int screenSetUp();     //screenSetup func
 
 /* level/map functions */
-Room **mapSetUp();     //print map func
-char **saveLevelPositions();
+Room ** roomSetUp();     //print map func
+char ** saveLevelPositions();
+// Level * createLevel();
 
-    /* Player functions */
-    Player *
-    playerSetup(); //pointer that creates player.
-int handleInput(int input, Player *user);
-int checkPosition(Position * newPosition, Player *user);
-int playerMove(Position *newPosition, Player *user);
+/* Player functions */
+Player *
+playerSetup(); //pointer that creates player.
+Position * handleInput(int input, Player * user);
+int checkPosition(Position * newPosition, Player * user, char ** level);
+int playerMove(Position * newPosition, Player *user, char **level);
 
 /* room functions */
-Room *createRoom(int y, int x, int height, int width);
-int drawRoom(Room *room);
-int connectDoors(Position *doorOne, Position *doorTwo);
+Room * createRoom(int y, int x, int height, int width);
+int drawRoom(Room * room);
+int connectDoors(Position * doorOne, Position * doorTwo);
 
 #endif
