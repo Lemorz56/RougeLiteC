@@ -13,6 +13,7 @@ typedef struct Level
     struct Room ** rooms;
     struct Monster ** monsters;
     int numberOfMonsters;
+    struct Player * user;
 } Level;
 
 typedef struct Position
@@ -40,16 +41,28 @@ typedef struct Player //player "class" / struct.
     //Room * room; //used to store which room player is in.
 } Player;
 
+typedef struct Monster
+{
+    char symbol;
+    int health;
+    int attack;
+    int speed;
+    int defence;
+    int pathfinding;
+    Position position;
+    
+} Monster;
+
+
 int screenSetUp();     //screenSetup func
 
 /* level/map functions */
+Level *createLevel();
 Room ** roomSetUp();     //print map func
 char ** saveLevelPositions();
-// Level * createLevel();
 
 /* Player functions */
-Player *
-playerSetup(); //pointer that creates player.
+Player * playerSetup(); //pointer that creates player.
 Position * handleInput(int input, Player * user);
 int checkPosition(Position * newPosition, Player * user, char ** level);
 int playerMove(Position * newPosition, Player *user, char **level);
