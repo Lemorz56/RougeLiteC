@@ -72,4 +72,11 @@ Room * createRoom(int y, int x, int height, int width);
 int drawRoom(Room * room);
 int connectDoors(Position * doorOne, Position * doorTwo);
 
+/* MONSTER FUNCTIONS */
+
+int addMonsters(Level * level);
+Monster *selectMonster(int level);
+Monster *createMonster(char symbol, int health, int attack, int speed, int defence, int pathfinding);
+int setStartingPosition(Monster *monster, Room *room);
+
 #endif
